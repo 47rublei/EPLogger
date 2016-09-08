@@ -1,0 +1,17 @@
+{
+    "name": "root/ep-logger",
+    "require": {
+        "psr/log": "1.0.0"
+    },
+    "authors": [
+        {
+            "name": "Anton Zakharov",
+            "email": "bizzzkvit@gmail.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Logger\\": "./src"
+        }
+    }
+}
