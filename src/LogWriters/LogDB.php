@@ -2,6 +2,7 @@
 namespace Logger\LogWriters;
 
 use mysqli;
+use Exception;
 use Psr\Log\LogLevel;
 use Logger\LogWriter;
 
@@ -23,15 +24,20 @@ class LogDB extends LogWriter
             isset($config['user']) &&
             isset($config['password']) &&
             isset($config['database'])) {
-            $this->logStream = new mysqli($config['host'], $config['user'], $config['password'], $config['database']);
+            $this->logStream = new mysqli(
+                $config['host'],
+                $config['user'],
+                $config['password'],
+                $config['database']
+            );
         } else {
-            throw new Exception("Не хватает параметров у конфига", 1);
+            throw new Exception("Не хватает параметров у конфига");
         }
     }
     public function log($level, $message, array $context = array())
     {
         $message = parent::log($level, $message, $context);
-        $query = 'INSERT INTO epl_messages(datetime,message,level) VALUES(?,?,?)';
+        $query = "INSERT INTO epl_messages(datetime, message, level) VALUES(?, ?, ?)";
         $stmt = $this->logStream->prepare($query);
         $stmt->bind_param("sss", $dt, $msg, $lvl);
         $dt = date($this->dateTpl);
@@ -39,7 +45,6 @@ class LogDB extends LogWriter
         $lvl = $this->logLevels[$level];
         $stmt->execute();
         $stmt->close();
-        $this->logStream->close();
     }
     public function __destruct()
     {
