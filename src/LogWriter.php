@@ -33,8 +33,12 @@ abstract class LogWriter
     public function log($level, $message, array $context)
     {
         $rc = new ReflectionClass('Psr\Log\LogLevel');
-        if (!array_search($level, $rc->getConstants())) {
-            throw new InvalidArgumentException("Система не поддерживает переданный уровень протоколирования");
+        try {
+            if (!array_search($level, $rc->getConstants())) {
+                throw new InvalidArgumentException("Система не поддерживает данный уровень протоколирования ($level)");
+            }
+        } catch (InvalidArgumentException $e) {
+            echo $e->getMessage()."\n";
         }
         unset($rc);
         return $message = $this->useContext($this->hardStringify($message), $context);
