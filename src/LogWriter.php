@@ -30,7 +30,7 @@ abstract class LogWriter
         }
         return strtr($message, $replace);
     }
-    public function log($message, array $context)
+    public function log($level, $message, array $context)
     {
         $rc = new ReflectionClass('Psr\Log\LogLevel');
         if (!array_search($level, $rc->getConstants())) {

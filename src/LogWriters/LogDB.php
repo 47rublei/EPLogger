@@ -30,7 +30,7 @@ class LogDB extends LogWriter
     }
     public function log($level, $message, array $context = array())
     {
-        $message = parent::log($message, $context);
+        $message = parent::log($level, $message, $context);
         $query = 'INSERT INTO epl_messages(datetime,message,level) VALUES(?,?,?)';
         $stmt = $this->logStream->prepare($query);
         $stmt->bind_param("sss", $dt, $msg, $lvl);
